@@ -1,7 +1,17 @@
+body {
+  background-color: #FFFFF0;
+}
+
+.header {
+  text-align: center;
+  font-size: 3rem;
+  font-family: 'Satisfy', cursive;
+  text-shadow: 2px 2px 2px #C0C0C0;
+}
+
 .cards {
   display: flex;
   flex-wrap: wrap;
-  border: 2px solid black;
 }
 
 #card-1,
@@ -9,5 +19,8 @@
 #card-3,
 #card-4,
 #card-5 {
-  width: 19vw
+  /*-webkit-box-reflect: below;*/
+  /*-webkit-box-reflect: below 1px linear-gradient(transparent, #FFFFF0);*/
+  height: 30rem;
+  width: 20%
 }
