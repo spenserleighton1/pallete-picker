@@ -1,0 +1,13 @@
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  border: 2px solid black;
+}
+
+#card-1,
+#card-2,
+#card-3,
+#card-4,
+#card-5 {
+  width: 19vw
+}
