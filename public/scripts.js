@@ -1,5 +1,5 @@
-generatePalleteBtn = document.querySelector('#generate-pallete-btn');
-cardOne = document.querySelector('#card-1');
+const generatePaletteBtn = document.querySelector('#generate-palette-btn');
+
 
 
 const generateSingleColor = () => {
@@ -7,7 +7,7 @@ const generateSingleColor = () => {
   return color;
 }
 
-const generatePallete = () => {
+const generatePalette = () => {
   document.querySelector('#card-1').style.backgroundColor = generateSingleColor();
   document.querySelector('#card-2').style.backgroundColor = generateSingleColor();
   document.querySelector('#card-3').style.backgroundColor = generateSingleColor();
@@ -15,4 +15,5 @@ const generatePallete = () => {
   document.querySelector('#card-5').style.backgroundColor = generateSingleColor();
 }
 
-generatePalleteBtn.addEventListener('click', generatePallete);
+window.onload = generatePalette;
+generatePaletteBtn.addEventListener('click', generatePalette);
