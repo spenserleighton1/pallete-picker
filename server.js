@@ -11,6 +11,8 @@ app.locals.projects = [
   {id: '1', 
    project: 'weatherly',
    palettes: [{name: 'cool palette',
+               hexCodes: ['#3676e4', '#f61ec8', '#726650', '#d7d714', '#c663e7']},
+               {name: 'workplz',
                hexCodes: ['#3676e4', '#f61ec8', '#726650', '#d7d714', '#c663e7']}]
   },{id: '2', 
    project: 'headcount',
@@ -49,3 +51,28 @@ app.get('/', (request, response) => {
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });
+
+
+
+
+
+//  // results.forEach(result => {
+  //   $('.projects').prepend(`
+  //   <li>
+  //     <h3>${result.project}</h3>
+
+  //     <section class='mini-palettes'>
+  //       ${result.palettes.forEach(palette => {
+  //         $('.mini-palettes').prepend(`
+  //           <p>${palette.name}</p>
+  //           ${palette.hexCodes.forEach(code => {
+  //             $('.mini-palettes').prepend(`
+  //               <article class='mini-card' style='background-color:${code}'></article>
+  //             `)
+  //           })}
+  //         `)
+  //       })}
+  //     </section>
+  //   </li>
+  //   `)
+  // })
