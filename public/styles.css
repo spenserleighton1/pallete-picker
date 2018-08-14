@@ -116,6 +116,15 @@ input {
   background-color: transparent;
   background-image: url('images/padlock.svg');
   background-size: 38px;
-
 }
+
+.mini-card {
+  border: 1px solid blue;
+  width: 40px;
+  height: 40px;
+}
+
+
+
+
 

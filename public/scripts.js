@@ -4,7 +4,11 @@ const lockBtn = $('.lock-btn');
 generatePaletteBtn.on('click', generatePalette);
 lockBtn.on('click', toggleLock);
 
-window.onload = generatePalette;
+
+$(document).ready(() => {
+  getProjects(),
+  generatePalette()
+})
 
 function toggleLock() {
   $(this).closest('article').toggleClass('locked');
@@ -27,3 +31,62 @@ function generatePalette() {
   $('#card-4').css('background-color', generateSingleColor('.card-4'));
   $('#card-5').css('background-color', generateSingleColor('.card-5'));
 }
+
+//FETCH
+
+function getProjects() {
+  fetch('http://localhost:3000/api/v1/projects/')
+    .then(response => response.json())
+    .then(results => displayProjects(results))
+}
+
+function displayProjects(results) {
+  if(!results) { return }
+
+  results.forEach(result => {
+    return $('.projects').prepend(`
+    <li>
+      <h3>${result.project}</h3>
+      <section>
+        <article class='mini-card' style='background-color:${result.palettes[0].hexCodes[0]}'></article>
+        <article class='mini-card' style='background-color:${result.palettes[0].hexCodes[1]}'></article>
+        <article class='mini-card' style='background-color:${result.palettes[0].hexCodes[2]}'></article>
+        <article class='mini-card' style='background-color:${result.palettes[0].hexCodes[3]}'></article>
+        <article class='mini-card' style='background-color:${result.palettes[0].hexCodes[4]}'></article>
+      </section>
+    </li>
+  `)
+  })
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

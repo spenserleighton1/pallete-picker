@@ -1,11 +1,23 @@
+const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 
 app.use(express.static('public'))
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.locals.projects = []
-app.locals.projects = [{id: '1', name: 'ppicker'},{id: '2', name: 'wow'}]
+app.locals.projects = [
+  {id: '1', 
+   project: 'weatherly',
+   palettes: [{name: 'cool palette',
+               hexCodes: ['#3676e4', '#f61ec8', '#726650', '#d7d714', '#c663e7']}]
+  },{id: '2', 
+   project: 'headcount',
+   palettes: [{name: 'neat stuff',
+               hexCodes: ['#3676e4', '#f61ec8', '#726650', '#d7d714', '#c663e7']}]
+  }
+  ]
 
 app.get('/api/v1/projects', (request, response) => {
   const projects = app.locals.projects;
@@ -22,7 +34,7 @@ app.post('/api/v1/projects', (request, response) => {
   const id = Date.now();
   const { project } = request.body;
 
-  app.locals.projects.push(project)
+  app.locals.projects.push({ id, project })
 
   response.status(201).json({ id, project })
 })
