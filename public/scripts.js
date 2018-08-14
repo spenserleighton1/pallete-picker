@@ -8,10 +8,10 @@ window.onload = generatePalette;
 
 function toggleLock() {
   $(this).closest('article').toggleClass('locked');
+  // $(this).closest('button').toggleClass('btn-locked');
 }
 
 function generateSingleColor(id) {
-  console.log(id)
   if ($(id).closest('article').hasClass('locked')) { return }
 
   let color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
