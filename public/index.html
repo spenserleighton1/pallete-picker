@@ -2,6 +2,7 @@
 <html>
 <head>
   <link href="https://fonts.googleapis.com/css?family=Satisfy" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
   <link rel='stylesheet' href='styles.css'>
   <title>Palette Picker</title>
 </head>
@@ -17,7 +18,21 @@
     <article id='card-5'></article>
   </section>
   <button id='generate-palette-btn'>Generate Palette</button>
-
+  <form>
+    <select>
+      <option value='project-1'>project 1</option>
+      <option value='project-2'>project 2</option>
+      <option value='project-3'>project 3</option>
+      <option value='project-4'>project 4</option>
+    </select>
+    <input type='text' name='palette-name'>
+    <button id='save-palette-btn'>Save Palette</button>
+  </form>
+  <form>
+    <p>Create a new project</p>
+    <input type='text' name='new-project-name'>
+    <button id='save-project-btn'>Save project</button>
+  </form>
   <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
   <script src="scripts.js"></script>
 </body>
