@@ -60,12 +60,20 @@ function getProjects() {
   return fetch('http://localhost:3000/api/v1/projects/')
     .then(response => response.json())
     .then(results => projectFetch(results))
-    .then(a => console.log(a))
+    // .then(a => displayProjects(a))
     .catch(err => console.log(err))
 }
 
 function projectFetch(projects) {
-  let unresolvedPromises = projects.map(project => getPalettes(project.id))
+  let unresolvedPromises = projects.map(project => {
+    let palettes = getPalettes(project.id).then(pal => {
+      let projectToDisplay = {
+      name: project.project_name,
+      palettes: pal
+    }
+    displayProjects(projectToDisplay)
+    })
+  })
   return Promise.all(unresolvedPromises)
 }
 
@@ -90,36 +98,24 @@ function postProject(data = {}) {
 
 function displayProjects(results) {
   if(!results) { return }
-
-  results.forEach(result => {
-    $('.projects').prepend(`
+  $('.projects').prepend(`
     <li>
-      <h3>${result.project}</h3>
-      <section class='mini-palettes'>
-        ${result.palettes.forEach(palette => {
-          $('.mini-palettes').prepend(`
-            <p>Palette Name: ${palette.name}</p>
-            <article class='mini-card' style='background-color:${palette.hexCodes[0]}'></article>
-            <article class='mini-card' style='background-color:${palette.hexCodes[1]}'></article>
-            <article class='mini-card' style='background-color:${palette.hexCodes[2]}'></article>
-            <article class='mini-card' style='background-color:${palette.hexCodes[3]}'></article>
-            <article class='mini-card' style='background-color:${palette.hexCodes[4]}'></article>
-            `)
-        })}
-      </section>
+      <h3>${results.name}</h3>
+      <section class='mini-palettes'></section>
     </li>
   `)
-  })
   
+  results.palettes.forEach(palettes => {
+    $('.mini-palettes').prepend(`
+      <p>Palette Name: ${palettes.palette_name}</p>
+      <article class='mini-card' style='background-color:${palettes.color_1}'></article>
+      <article class='mini-card' style='background-color:${palettes.color_2}'></article>
+      <article class='mini-card' style='background-color:${palettes.color_3}'></article>
+      <article class='mini-card' style='background-color:${palettes.color_4}'></article>
+      <article class='mini-card' style='background-color:${palettes.color_5}'></article>
+    `)
+  })
 }
-
-
-
-
-
-
-
-
 
 
 
