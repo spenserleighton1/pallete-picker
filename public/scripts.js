@@ -12,6 +12,7 @@ let colors = [];
 
 $(document).ready(() => {
   getProjects(),
+  // getPalettes(),
   generatePalette()
 })
 
@@ -58,11 +59,24 @@ function savePalette(e) {
 function getProjects() {
   return fetch('http://localhost:3000/api/v1/projects/')
     .then(response => response.json())
-    .then(results => displayProjects(results))
+    .then(results => projectFetch(results))
+    .then(a => console.log(a))
     .catch(err => console.log(err))
 }
 
-function postPalettes(data = {}) {
+function projectFetch(projects) {
+  let unresolvedPromises = projects.map(project => getPalettes(project.id))
+  return Promise.all(unresolvedPromises)
+}
+
+function getPalettes(project_id) {
+  return fetch(`http://localhost:3000/api/v1/palettes/${project_id}`)
+    .then(response => response.json())
+    .then(results => results)
+    .catch(err => console.log(err))
+}
+
+function postProject(data = {}) {
   return fetch('http://localhost:3000/api/v1/projects/', {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -71,6 +85,8 @@ function postPalettes(data = {}) {
   .then(response => response.json())
   .then(a => console.log(a))
 }
+
+
 
 function displayProjects(results) {
   if(!results) { return }
