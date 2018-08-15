@@ -12,7 +12,7 @@ let colors = [];
 
 $(document).ready(() => {
   getProjects(),
-  // getPalettes(),
+
   generatePalette()
 })
 
@@ -39,9 +39,12 @@ function generatePalette() {
 function saveProject(e) {
   e.preventDefault()
   let inputVal = $('#project-input').val();
-  $('.dropdown-menu').append(`
-    <option value='${inputVal}'>${inputVal}</option>
-  `)
+  const project = {project_name: inputVal}
+  postProject(project)
+
+  // $('.dropdown-menu').append(`
+  //   <option value='${inputVal}'>${inputVal}</option>
+  // `)
 }
 
 function savePalette(e) {
@@ -53,14 +56,14 @@ function savePalette(e) {
     let paletteToSave = { name: inputVal, hexCodes: [...colors] }
     console.log(paletteToSave)
     colors = []
-    postPalettes(paletteToSave)
+    console.log(paletteToSave)
+    // postPalettes(paletteToSave)
 }
 
 function getProjects() {
   return fetch('http://localhost:3000/api/v1/projects/')
     .then(response => response.json())
     .then(results => projectFetch(results))
-    // .then(a => displayProjects(a))
     .catch(err => console.log(err))
 }
 
@@ -74,7 +77,18 @@ function projectFetch(projects) {
     displayProjects(projectToDisplay)
     })
   })
+
+  populateSelect(projects)
   return Promise.all(unresolvedPromises)
+}
+
+function populateSelect(projects) {
+  projects.forEach(project => {
+    $('.dropdown-menu').append(`
+    <option value='${project.id}'>${project.project_name}</option>
+    `)
+    // console.log($('option').val())
+  })
 }
 
 function getPalettes(project_id) {
@@ -84,14 +98,19 @@ function getPalettes(project_id) {
     .catch(err => console.log(err))
 }
 
-function postProject(data = {}) {
+function postProject(project) {
   return fetch('http://localhost:3000/api/v1/projects/', {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
+    body: JSON.stringify(project)
   })
   .then(response => response.json())
-  .then(a => console.log(a))
+  .then(id => {
+    $('.dropdown-menu').append(`
+    <option value='${id}'>${project.project_name}</option>
+  `)
+  })
+      console.log('s')
 }
 
 
@@ -104,7 +123,7 @@ function displayProjects(results) {
       <section class='mini-palettes'></section>
     </li>
   `)
-  
+
   results.palettes.forEach(palettes => {
     $('.mini-palettes').prepend(`
       <p>Palette Name: ${palettes.palette_name}</p>
