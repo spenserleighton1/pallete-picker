@@ -2,44 +2,91 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 
+const environment = process.env.NODE_ENV || 'development';
+const configuration = require('./knexfile')[environment];
+const database = require('knex')(configuration);
+
 app.use(express.static('public'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.locals.projects = []
-app.locals.projects = [
-  {id: '1', 
-   project: 'weatherly',
-   palettes: [{name: 'cool palette',
-               hexCodes: ['#3676e4', '#f61ec8', '#726650', '#d7d714', '#c663e7']},
-               {name: 'workplz',
-               hexCodes: ['#3676e4', '#f61ec8', '#726650', '#d7d714', '#c663e7']}]
-  },{id: '2', 
-   project: 'headcount',
-   palettes: [{name: 'neat stuff',
-               hexCodes: ['#3676e4', '#f61ec8', '#726650', '#d7d714', '#c663e7']}]
-  }
-  ]
 
 app.get('/api/v1/projects', (request, response) => {
-  const projects = app.locals.projects;
-  response.status(200).json(projects);
+  database('projects').select()
+    .then((projects) => {
+      response.status(200).json(projects)
+    })
+    .catch((error) => {
+      response.status(500).json({ error })
+    })
+});
+
+app.get('/api/v1/palettes', (request, response) => {
+  database('palettes').select()
+    .then((palettes) => {
+      response.status(200).json(palettes)
+    })
+    .catch((error) => {
+      response.status(500).json({ error })
+    })
+});
+
+
+
+app.post('/api/v1/projects', (request, response) => {
+  const project = request.body;
+
+  for (let requireParameter of ['project_name']) {
+    if (!project[requireParameter]) {
+      return response
+        .status(422)
+        .send({ error: `Expected format: { project_name: <STRING> }. You're missing a "${requireParameter}" property.`})
+    }
+  }
+  database('projects').insert(project, 'id')
+    .then(project => {
+      response.status(201).json({ id: project[0] })
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
+
+app.post('/api/v1/palettes', (request, response) => {
+  const palette = request.body;
+
+  for (let requireParameter of ['palette_name', 'color_1', 'color_2', 'color_3', 'color_4', 'color_5', 'project_id']) {
+    if (!palette[requireParameter]) {
+      return response
+        .status(422)
+        .send({ error: `Expected format: { palette_name: <STRING>, 'color_1' <STRING>, 'color_2' <STRING>, 'color_3' <STRING>, 'color_4' <STRING>, 'color_5' <STRING>, 'project_id <STRING>' }. You're missing a "${requireParameter}" property.`})
+    }
+  }
+  database('palettes').insert(palette, 'id')
+    .then(palette => {
+      response.status(201).json({ id: palette[0]})
+    })
+    .catch(error => {
+      response.status(500).json({ error })
+    });
 });
 
 app.get('/api/v1/projects/:id', (request, response) => {
-  const { id } = request.params;
-  const project = app.locals.projects.find(project => project.id === id);
-  return response.status(200).json(project);
+  database('projects').where('id', request.params.id).select()
+    .then(projects => {
+      if (projects.length) {
+        response.status(200).json(projects);
+      } else {
+        response.status(404).json({
+          error: `Could not find project with id ${request.params.id}`
+        });
+      }
+    })
+    .catch(error => {
+      response.status(500).json({ error })
+    });
 });
 
-app.post('/api/v1/projects', (request, response) => {
-  const id = Date.now();
-  const { project } = request.body;
-
-  app.locals.projects.push({ id, project })
-
-  response.status(201).json({ id, project })
-})
 
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Palette Picker';
@@ -51,28 +98,3 @@ app.get('/', (request, response) => {
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });
-
-
-
-
-
-//  // results.forEach(result => {
-  //   $('.projects').prepend(`
-  //   <li>
-  //     <h3>${result.project}</h3>
-
-  //     <section class='mini-palettes'>
-  //       ${result.palettes.forEach(palette => {
-  //         $('.mini-palettes').prepend(`
-  //           <p>${palette.name}</p>
-  //           ${palette.hexCodes.forEach(code => {
-  //             $('.mini-palettes').prepend(`
-  //               <article class='mini-card' style='background-color:${code}'></article>
-  //             `)
-  //           })}
-  //         `)
-  //       })}
-  //     </section>
-  //   </li>
-  //   `)
-  // })
