@@ -9,6 +9,7 @@ savePaletteBtn.on('click', savePalette)
 saveProjectBtn.on('click', saveProject)
 
 let colors = [];
+let project_id;
 
 $(document).ready(() => {
   getProjects(),
@@ -41,10 +42,6 @@ function saveProject(e) {
   let inputVal = $('#project-input').val();
   const project = {project_name: inputVal}
   postProject(project)
-
-  // $('.dropdown-menu').append(`
-  //   <option value='${inputVal}'>${inputVal}</option>
-  // `)
 }
 
 function savePalette(e) {
@@ -52,12 +49,43 @@ function savePalette(e) {
   $('.hex').each(function() {
     colors.push($(this).text());
   });
-    let inputVal = $('#palette-input').val();
-    let paletteToSave = { name: inputVal, hexCodes: [...colors] }
-    console.log(paletteToSave)
-    colors = []
-    console.log(paletteToSave)
-    // postPalettes(paletteToSave)
+
+  let inputVal = $('#palette-input').val();
+  let id = $('select option:selected').val();
+  let paletteToSave = { palette_name: inputVal, hexCodes: [...colors], project_id: id }
+  colors = []
+  postPalette(paletteToSave)
+}
+
+function postPalette(palette) {
+  return fetch('http://localhost:3000/api/v1/palettes/', {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      palette_name: palette.palette_name,
+      color_1: palette.hexCodes[0],
+      color_2: palette.hexCodes[1],
+      color_3: palette.hexCodes[2],
+      color_4: palette.hexCodes[3],
+      color_5: palette.hexCodes[4],
+      project_id: palette.project_id
+    })
+  })
+  .then(response => response.json())
+}
+
+function postProject(project) {
+  return fetch('http://localhost:3000/api/v1/projects/', {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(project)
+  })
+  .then(response => response.json())
+  .then(id => {
+    $('.dropdown-menu').append(`
+    <option value='${id}'>${project.project_name}</option>
+    `)
+  })
 }
 
 function getProjects() {
@@ -87,7 +115,6 @@ function populateSelect(projects) {
     $('.dropdown-menu').append(`
     <option value='${project.id}'>${project.project_name}</option>
     `)
-    // console.log($('option').val())
   })
 }
 
@@ -98,30 +125,13 @@ function getPalettes(project_id) {
     .catch(err => console.log(err))
 }
 
-function postProject(project) {
-  return fetch('http://localhost:3000/api/v1/projects/', {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(project)
-  })
-  .then(response => response.json())
-  .then(id => {
-    $('.dropdown-menu').append(`
-    <option value='${id}'>${project.project_name}</option>
-  `)
-  })
-      console.log('s')
-}
-
-
-
 function displayProjects(results) {
   if(!results) { return }
   $('.projects').prepend(`
-    <li>
-      <h3>${results.name}</h3>
+    <article class='saved-palettes'>
+      <h2 class='project-name'>${results.name}</h2>
       <section class='mini-palettes'></section>
-    </li>
+    </article>
   `)
 
   results.palettes.forEach(palettes => {
