@@ -12,15 +12,14 @@ let colors = [];
 let project_id;
 
 $(document).ready(() => {
-  getProjects(),
-
-  generatePalette()
+  generatePalette(),
+  getProjects()
 })
 
 function toggleLock() {
   $(this).closest('article').toggleClass('locked');
-  // $(this).closest('button').toggleClass('btn-locked');
 }
+
 function generateSingleColor(id) {
   if ($(id).closest('article').hasClass('locked')) { return }
 
@@ -72,6 +71,7 @@ function postPalette(palette) {
     })
   })
   .then(response => response.json())
+  getProjects()
 }
 
 function postProject(project) {
@@ -83,7 +83,7 @@ function postProject(project) {
   .then(response => response.json())
   .then(id => {
     $('.dropdown-menu').append(`
-    <option value='${id}'>${project.project_name}</option>
+    <option value='${JSON.stringify(id.id)}'>${project.project_name}</option>
     `)
   })
 }
@@ -98,10 +98,13 @@ function getProjects() {
 function projectFetch(projects) {
   let unresolvedPromises = projects.map(project => {
     let palettes = getPalettes(project.id).then(pal => {
+
       let projectToDisplay = {
+      id: project.id,  
       name: project.project_name,
       palettes: pal
-    }
+      }
+
     displayProjects(projectToDisplay)
     })
   })
@@ -125,23 +128,24 @@ function getPalettes(project_id) {
     .catch(err => console.log(err))
 }
 
-function displayProjects(results) {
-  if(!results) { return }
+function displayProjects(projects) {
+  if(!projects) { return }
+
   $('.projects').prepend(`
     <article class='saved-palettes'>
-      <h2 class='project-name'>${results.name}</h2>
-      <section class='mini-palettes'></section>
+      <h2 class='project-name'>${projects.name}</h2>
+      <section class='mini-palettes' id='${projects.id}'></section>
     </article>
   `)
 
-  results.palettes.forEach(palettes => {
-    $('.mini-palettes').prepend(`
-      <p>Palette Name: ${palettes.palette_name}</p>
-      <article class='mini-card' style='background-color:${palettes.color_1}'></article>
-      <article class='mini-card' style='background-color:${palettes.color_2}'></article>
-      <article class='mini-card' style='background-color:${palettes.color_3}'></article>
-      <article class='mini-card' style='background-color:${palettes.color_4}'></article>
-      <article class='mini-card' style='background-color:${palettes.color_5}'></article>
+  projects.palettes.forEach(palette => {
+      $(`#${projects.id}`).prepend(`
+      <p>Palette Name: ${palette.palette_name}</p>
+      <article class='mini-card' style='background-color:${palette.color_1}'></article>
+      <article class='mini-card' style='background-color:${palette.color_2}'></article>
+      <article class='mini-card' style='background-color:${palette.color_3}'></article>
+      <article class='mini-card' style='background-color:${palette.color_4}'></article>
+      <article class='mini-card' style='background-color:${palette.color_5}'></article>
     `)
   })
 }
