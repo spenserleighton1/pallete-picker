@@ -1,18 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link href="https://fonts.googleapis.com/css?family=Satisfy" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
   <link rel='stylesheet' href='styles.css'>
-  <title>Pallete Picker</title>
+  <title>Palette Picker</title>
 </head>
 <body>
+  <header>
+    <h1 class='header'>Palette Picker</h1>
+  </header>
   <section class='cards'>
-    <article id='card-1'>1</article>
-    <article id='card-2'>2</article>
-    <article id='card-3'>3</article>
-    <article id='card-4'>4</article>
-    <article id='card-5'>5</article>
+    <article class='card' id='card-1'>
+      <button class='lock-btn'></button>
+      <p class='card-1 hex'></p>
+    </article>
+    <article class='card' id='card-2'>
+      <button class='lock-btn'></button>
+      <p class='card-2 hex'></p>
+    </article>
+    <article class='card' id='card-3'>
+      <button class='lock-btn'></button>
+      <p class='card-3 hex'></p>
+    </article>
+    <article class='card' id='card-4'>
+      <button class='lock-btn'></button>
+      <p class='card-4 hex'></p>
+    </article>
+    <article class='card' id='card-5'>
+      <button class='lock-btn'></button>
+      <p class='card-5 hex'></p>
+    </article>
   </section>
-  <button id='generate-pallete-btn'>Generate Pallete</button>
+  <button class='button' id='generate-palette-btn'><span>Generate Palette</span></button>
+  <form>
+    <select class='dropdown-menu'>
+    </select>
+    <input id='palette-input' type='text' name='palette-name'>
+    <button class='button' id='save-palette-btn'><span>Save Palette</span></button>
+  </form>
+  <form>
+    <p>Create a new project</p>
+    <input id='project-input' type='text' name='new-project-name'>
+    <button class='button' id='save-project-btn'><span>Save project</span></button>
+  </form>
+  <section class='saved-projects'>
+    <section class='projects'>
+    </section>
+  </section>
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
   <script src="scripts.js"></script>
 </body>
 </html>
