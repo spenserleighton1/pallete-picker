@@ -100,9 +100,11 @@ app.get('/api/v1/palettes/:id', (request, response) => {
       response.status(500).json({ error })
     });
 });
-// app.delete('/api/v1/palettes/:id', (request, response) => {
-//   database('palettes').where('id', request.params.id).del()
-// })
+
+app.delete('/api/v1/palettes/:id', (request, response) => {
+  database('palettes').where('id', request.params.id).del()
+  .then(d => d)
+})
 
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Palette Picker';

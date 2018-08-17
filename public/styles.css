@@ -151,12 +151,28 @@ form {
 .project-name {
   /*height: 3rem;*/
   /*margin: 0;*/
+  text-shadow: 2px 2px 2px #C0C0C0;
   position: relative;
   top: 0;
   font-size: 1.75rem;
   font-family: 'Satisfy', cursive;
 }
 
+.delete-btn {
+  float: right;
+  margin-right: 63px; 
+  width: 25px;
+  height: 25px;
+  border: none;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  background-image: url('images/icon.svg');
+  background-size: 25px;
+}
+
+.palette-name-span {
+  font-weight: bold;
+}
 
 
 

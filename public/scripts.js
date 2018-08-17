@@ -1,15 +1,18 @@
 const generatePaletteBtn = $('#generate-palette-btn');
 const lockBtn = $('.lock-btn');
-const savePaletteBtn = $('#save-palette-btn')
-const saveProjectBtn = $('#save-project-btn')
+const savePaletteBtn = $('#save-palette-btn');
+const saveProjectBtn = $('#save-project-btn');
+const deleteBtn = $('.projects');
+const showCase = $('.projects');
 
 generatePaletteBtn.on('click', generatePalette);
 lockBtn.on('click', toggleLock);
-savePaletteBtn.on('click', savePalette)
-saveProjectBtn.on('click', saveProject)
+savePaletteBtn.on('click', savePalette);
+saveProjectBtn.on('click', saveProject);
+deleteBtn.on('click', '.delete-btn', deletePalette);
+showCase.on('click', )
 
 let colors = [];
-let project_id;
 
 $(document).ready(() => {
   generatePalette(),
@@ -53,7 +56,7 @@ function savePalette(e) {
   let id = $('select option:selected').val();
   let paletteToSave = { palette_name: inputVal, hexCodes: [...colors], project_id: id }
   colors = []
-  postPalette(paletteToSave)
+  postPalette(paletteToSave);
 }
 
 function postPalette(palette) {
@@ -71,7 +74,8 @@ function postPalette(palette) {
     })
   })
   .then(response => response.json())
-  getProjects()
+  .then(() => getProjects())
+
 }
 
 function postProject(project) {
@@ -89,6 +93,7 @@ function postProject(project) {
 }
 
 function getProjects() {
+  $('.projects').empty()
   return fetch('http://localhost:3000/api/v1/projects/')
     .then(response => response.json())
     .then(results => projectFetch(results))
@@ -128,9 +133,21 @@ function getPalettes(project_id) {
     .catch(err => console.log(err))
 }
 
+function deletePalette() {
+  let id = $(this).attr('id')
+  fetch(`http://localhost:3000/api/v1/palettes/${id}`, {
+    method: 'DELETE'
+  });
+
+  $(this).closest('div').remove()
+}
+
+function showCasePalette() {
+
+}
+
 function displayProjects(projects) {
   if(!projects) { return }
-
   $('.projects').prepend(`
     <article class='saved-palettes'>
       <h2 class='project-name'>${projects.name}</h2>
@@ -140,12 +157,17 @@ function displayProjects(projects) {
 
   projects.palettes.forEach(palette => {
       $(`#${projects.id}`).prepend(`
-      <p>Palette Name: ${palette.palette_name}</p>
-      <article class='mini-card' style='background-color:${palette.color_1}'></article>
-      <article class='mini-card' style='background-color:${palette.color_2}'></article>
-      <article class='mini-card' style='background-color:${palette.color_3}'></article>
-      <article class='mini-card' style='background-color:${palette.color_4}'></article>
-      <article class='mini-card' style='background-color:${palette.color_5}'></article>
+      <div>
+        <p>
+          <span class='palette-name-span'>Palette Name:</span> ${palette.palette_name}
+          <button class='delete-btn' id='${palette.id}'></button>
+        </p>
+        <article class='mini-card' style='background-color:${palette.color_1}'></article>
+        <article class='mini-card' style='background-color:${palette.color_2}'></article>
+        <article class='mini-card' style='background-color:${palette.color_3}'></article>
+        <article class='mini-card' style='background-color:${palette.color_4}'></article>
+        <article class='mini-card' style='background-color:${palette.color_5}'></article>
+      </div>
     `)
   })
 }
