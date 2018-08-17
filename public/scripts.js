@@ -66,7 +66,7 @@ function savePalette(e) {
 }
 
 function postPalette(palette) {
-  return fetch('http://localhost:3000/api/v1/palettes/', {
+  return fetch('/api/v1/palettes/', {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -86,7 +86,7 @@ function postPalette(palette) {
 
 function postProject(project) {
   console.log(project)
-  return fetch('http://localhost:3000/api/v1/projects/', {
+  return fetch('/api/v1/projects/', {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(project)
@@ -101,7 +101,7 @@ function postProject(project) {
 
 function getProjects() {
   $('.projects').empty()
-  return fetch('http://localhost:3000/api/v1/projects/')
+  return fetch('/api/v1/projects/')
     .then(response => response.json())
     .then(results => projectFetch(results))
     .catch(err => console.log(err))
@@ -134,7 +134,7 @@ function populateSelect(projects) {
 }
 
 function getPalettes(project_id) {
-  return fetch(`http://localhost:3000/api/v1/palettes/${project_id}`)
+  return fetch(`/api/v1/palettes/${project_id}`)
     .then(response => response.json())
     .then(results => results)
     .catch(err => console.log(err))
@@ -145,7 +145,7 @@ function deletePalette() {
   console.log( $(`#${id}`) )
   
   let project_id = $('.mini-palettes').attr('id')
-  fetch(`http://localhost:3000/api/v1/palettes/${id}`, {
+  fetch(`/api/v1/palettes/${id}`, {
     method: 'DELETE'
   });
 
