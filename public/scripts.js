@@ -10,7 +10,7 @@ lockBtn.on('click', toggleLock);
 savePaletteBtn.on('click', savePalette);
 saveProjectBtn.on('click', saveProject);
 deleteBtn.on('click', '.delete-btn', deletePalette);
-showCase.on('click', )
+showCase.on('click', '.mini-card', showCasePalette);
 
 let colors = [];
 
@@ -26,21 +26,17 @@ function toggleLock() {
 function generateSingleColor(id) {
   if ($(id).closest('article').hasClass('locked')) { return }
 
-  let color = generateColor()
-  let hexDisplay = $(id);
-  hexDisplay.text(color);
-  
-  return color;
-}
-
-function generateColor() {
   const nums = '0123456789abcdef';
   let color = ['#'];
   for(let i = 0; i < 6; i++) {
     let index = Math.floor(Math.random() * 15);
     color.push(nums[index]);
   }
-  return color.join('');
+  color = color.join('')
+  let hexDisplay = $(id);
+  hexDisplay.text(color);
+  
+  return color;
 }
 
 function generatePalette() {
@@ -146,38 +142,54 @@ function getPalettes(project_id) {
 
 function deletePalette() {
   let id = $(this).attr('id')
+  console.log( $(`#${id}`) )
+  
+  let project_id = $('.mini-palettes').attr('id')
   fetch(`http://localhost:3000/api/v1/palettes/${id}`, {
     method: 'DELETE'
   });
 
   $(this).closest('div').remove()
+  if (!$(`#${id}`).length()) {
+}
 }
 
 function showCasePalette() {
+    let one = $('.one').css('background-color');
+    let two = $('.two').css('background-color');
+    let three = $('.three').css('background-color');
+    let four = $('.four').css('background-color');
+    let five = $('.five').css('background-color');
 
+    $('#card-1').css('background-color', one);
+    $('#card-2').css('background-color', two);
+    $('#card-3').css('background-color', three);
+    $('#card-4').css('background-color', four);
+    $('#card-5').css('background-color', five);
 }
 
 function displayProjects(projects) {
-  if(!projects) { return }
+  if (!projects) { return }
+
   $('.projects').prepend(`
     <article class='saved-palettes'>
       <h2 class='project-name'>${projects.name}</h2>
       <section class='mini-palettes' id='${projects.id}'></section>
     </article>
   `)
-
+  
   projects.palettes.forEach(palette => {
       $(`#${projects.id}`).prepend(`
       <div>
         <p>
-          <span class='palette-name-span'>Palette Name:</span> ${palette.palette_name}
+          <span class='palette-name-span'>Palette Name:</span class='name'> ${palette.palette_name}
           <button class='delete-btn' id='${palette.id}'></button>
         </p>
-        <article class='mini-card' style='background-color:${palette.color_1}'></article>
-        <article class='mini-card' style='background-color:${palette.color_2}'></article>
-        <article class='mini-card' style='background-color:${palette.color_3}'></article>
-        <article class='mini-card' style='background-color:${palette.color_4}'></article>
-        <article class='mini-card' style='background-color:${palette.color_5}'></article>
+        <article class='mini-card one' style='background-color:${palette.color_1}'></article>
+        <article class='mini-card two' style='background-color:${palette.color_2}'></article>
+        <article class='mini-card three' style='background-color:${palette.color_3}'></article>
+        <article class='mini-card four' style='background-color:${palette.color_4}'></article>
+        <article class='mini-card five' style='background-color:${palette.color_5}'></article>
       </div>
     `)
   })

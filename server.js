@@ -106,6 +106,11 @@ app.delete('/api/v1/palettes/:id', (request, response) => {
   .then(d => d)
 })
 
+app.delete('/api/v1/projects/:id', (request, response) => {
+  database('palettes').where('id', request.params.id).del()
+  .then(d => d)
+})
+
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Palette Picker';
 
