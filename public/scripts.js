@@ -26,11 +26,21 @@ function toggleLock() {
 function generateSingleColor(id) {
   if ($(id).closest('article').hasClass('locked')) { return }
 
-  let color = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+  let color = generateColor()
   let hexDisplay = $(id);
   hexDisplay.text(color);
   
   return color;
+}
+
+function generateColor() {
+  const nums = '0123456789abcdef';
+  let color = ['#'];
+  for(let i = 0; i < 6; i++) {
+    let index = Math.floor(Math.random() * 15);
+    color.push(nums[index]);
+  }
+  return color.join('');
 }
 
 function generatePalette() {
@@ -79,6 +89,7 @@ function postPalette(palette) {
 }
 
 function postProject(project) {
+  console.log(project)
   return fetch('http://localhost:3000/api/v1/projects/', {
     method: "POST",
     headers: { "Content-Type": "application/json" },
