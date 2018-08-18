@@ -161,6 +161,11 @@ input {
   width: 15rem;
 }
 
+.no-projects {
+  text-align: center;
+  margin-top: 0;
+}
+
 .project-name {
   margin: 0;
   text-shadow: 2px 2px 2px #C0C0C0;

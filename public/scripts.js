@@ -84,7 +84,6 @@ function savePalette(e) {
 //POST
 
 function postProject(project) {
-  console.log(project)
   return fetch('/api/v1/projects/', {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -179,6 +178,7 @@ function deleteProject() {
   });
 
   $(`#saved-${projectId}`).remove()
+  displayProjects([])
 }
 
 function populateSelect(projects) {
@@ -198,7 +198,12 @@ function showCasePalette() {
 
 
 function displayProjects(projects) {
-  if (!projects) { return }
+  console.log(projects)
+  if (!projects.length) { 
+    $('.no-projects').text('No projects to display. Create and Save a new project to add palettes.')
+    return
+  }
+  $('.no-projects').text('')
   populateSelect(projects)
 
   projects.forEach(project => {
