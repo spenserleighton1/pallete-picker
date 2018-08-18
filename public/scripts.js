@@ -40,9 +40,6 @@ function generateSingleColor(id) {
   return color;
 }
 
-
-
-
 function displayFeaturePalette(palette) {
   $('.card').each(function(i) {
     return $(this).css('background-color', generateSingleColor(`.card-${i+1}`))
@@ -95,6 +92,7 @@ function postProject(project) {
     <option value='${JSON.stringify(id.id)}'>${project.project_name}</option>
     `)
   })
+  .then(()=> getProjects())
 }
 
 function postPalette(palette) {
@@ -147,6 +145,7 @@ function getPaletteById(id) {
 function deletePalette() {
   let deleteId = $(this).closest('div').attr('class')
   let projectName = $(this).closest('article').attr('id')
+  let projectId = $(this).closest('.mini-palettes').attr('id')
   let id = $(this).attr('id')
 
   fetch(`/api/v1/palettes/${id}`, {
@@ -158,7 +157,9 @@ function deletePalette() {
   let sectionLength = $(`.${deleteId}`).length
 
   if (!sectionLength) {
-    $(`#${projectName}`).children('section').text('No palettes to display.')
+    $(`#${projectName}`)
+      .children('section')
+      .prepend(`<p id='no-palettes-${projectId}'>No palettes to display.</p>`)
   }
 }
 
@@ -187,8 +188,9 @@ function displayProjects(projects) {
       <article class='saved-palettes' id='saved-${project.id}'>
         <h2 class='project-name'>${project.project_name}</h2>
         <section class='mini-palettes ${project.id}' id='${project.id}'>
-        No palettes to display.
+        <p id='no-palettes-${project.id}'>No palettes to display.</p>
         </section>
+        <button class='delete-project-btn' id='${project.id}'>remove project</button>
       </article>
     `)
   })
@@ -196,7 +198,7 @@ function displayProjects(projects) {
 
 function displayPalettes(palettes) {
  palettes.forEach(palette => {
-    $(`#${palette.project_id}`).empty()
+    $(`#no-palettes-${palette.project_id}`).empty()
 
       $(`#${palette.project_id}`).prepend(`
       <div class='delete-${palette.project_id}'>

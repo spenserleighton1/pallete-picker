@@ -3,9 +3,16 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
-.header {
+.main-header {
   text-align: center;
   font-size: 3rem;
+  font-family: 'Satisfy', cursive;
+  text-shadow: 2px 2px 2px #C0C0C0;
+}
+
+.projects-header {
+  text-align: center;
+  font-size: 2rem;
   font-family: 'Satisfy', cursive;
   text-shadow: 2px 2px 2px #C0C0C0;
 }
@@ -119,7 +126,7 @@ body {
 }
 
 .mini-palettes {
-  height: 25rem;
+  max-height: 25rem;
   overflow: scroll;
 }
 
