@@ -66,7 +66,7 @@ function savePalette(e) {
 }
 
 function postPalette(palette) {
-  return fetch('http://localhost:3000/api/v1/palettes/', {
+  return fetch('/api/v1/palettes/', {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -86,7 +86,7 @@ function postPalette(palette) {
 
 function postProject(project) {
   console.log(project)
-  return fetch('http://localhost:3000/api/v1/projects/', {
+  return fetch('/api/v1/projects/', {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(project)
@@ -101,7 +101,7 @@ function postProject(project) {
 
 function getProjects() {
   $('.projects').empty()
-  return fetch('http://localhost:3000/api/v1/projects/')
+  return fetch('/api/v1/projects/')
     .then(response => response.json())
     .then(results => projectFetch(results))
     .catch(err => console.log(err))
@@ -134,24 +134,33 @@ function populateSelect(projects) {
 }
 
 function getPalettes(project_id) {
-  return fetch(`http://localhost:3000/api/v1/palettes/${project_id}`)
+  return fetch(`/api/v1/palettes/${project_id}`)
     .then(response => response.json())
     .then(results => results)
     .catch(err => console.log(err))
 }
 
 function deletePalette() {
+  let deleteId = $(this).closest('div').attr('class')
+  let projectName = $(this).closest('article').attr('id')
   let id = $(this).attr('id')
-  console.log( $(`#${id}`) )
-  
-  let project_id = $('.mini-palettes').attr('id')
-  fetch(`http://localhost:3000/api/v1/palettes/${id}`, {
+
+  fetch(`/api/v1/palettes/${id}`, {
     method: 'DELETE'
   });
-
+  
   $(this).closest('div').remove()
-  if (!$(`#${id}`).length()) {
+
+  let sectionLength = $(`.${deleteId}`).length
+
+  if (!sectionLength) {
+    console.log(projectName)
+    $(`#${projectName}`).remove()
+  }
 }
+
+function hideProjects() {
+  
 }
 
 function showCasePalette() {
@@ -172,7 +181,7 @@ function displayProjects(projects) {
   if (!projects) { return }
 
   $('.projects').prepend(`
-    <article class='saved-palettes'>
+    <article class='saved-palettes' id='saved-${projects.id}'>
       <h2 class='project-name'>${projects.name}</h2>
       <section class='mini-palettes' id='${projects.id}'></section>
     </article>
@@ -180,7 +189,7 @@ function displayProjects(projects) {
   
   projects.palettes.forEach(palette => {
       $(`#${projects.id}`).prepend(`
-      <div>
+      <div class='delete-${projects.id}'>
         <p>
           <span class='palette-name-span'>Palette Name:</span class='name'> ${palette.palette_name}
           <button class='delete-btn' id='${palette.id}'></button>
