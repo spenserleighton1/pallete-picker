@@ -194,6 +194,18 @@ input {
   background-size: 25px;
 }
 
+.delete-project-btn {
+  padding: 0;
+  color: #f4511e;
+  background-color: transparent;
+  border: none;
+}
+
+.no-palettes {
+  margin-bottom: 0;
+  margin-left: 0;
+}
+
 .palette-name-span {
   font-weight: bold;
 }

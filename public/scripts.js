@@ -188,7 +188,7 @@ function displayProjects(projects) {
       <article class='saved-palettes' id='saved-${project.id}'>
         <h2 class='project-name'>${project.project_name}</h2>
         <section class='mini-palettes ${project.id}' id='${project.id}'>
-        <p id='no-palettes-${project.id}'>No palettes to display.</p>
+        <p class='no-palettes' id='no-palettes-${project.id}'>No palettes to display.</p>
         </section>
         <button class='delete-project-btn' id='${project.id}'>remove project</button>
       </article>
