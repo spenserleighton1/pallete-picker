@@ -169,6 +169,7 @@ function deletePalette() {
 
 function deleteProject() {
   let projectId = $(this).attr('id')
+  $(`select option[value='${projectId}']`).remove()
 
   fetch(`/api/v1/palettes/delete/${projectId}`, {
     method: 'DELETE'
@@ -179,6 +180,7 @@ function deleteProject() {
   });
 
   $(`#saved-${projectId}`).remove()
+
   if(!$('.projects').children().length) {
     $('.no-projects').text('No projects to display. Create and Save a new project to add palettes.')
   }
