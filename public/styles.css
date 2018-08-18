@@ -179,6 +179,53 @@ input {
   font-weight: bold;
 }
 
+@media screen {
+  .cards {
+    width: 100%;
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
 
+  #card-1 {
+    margin-top: 100px;
+  }
+
+  #card-1,
+  #card-2,
+  #card-3,
+  #card-4,
+  #card-5 {
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.5rem;
+    text-align: center;
+    height: 4.75rem;
+    width: 100vw
+  }
+
+  #generate-palette-btn {
+    height: 3.5rem;
+    width: 100%;
+  }
+
+  .lock-btn {
+    float: left;
+    margin-top: 1.25rem;
+    margin-left: 1rem;
+  }
+
+  .header {
+    height: 6rem;
+    width: 100%;
+    margin-top: 0;
+    padding-top: 1rem;
+    position: fixed;
+    top: 0rem;
+    background-color: #FFFFF0;
+  }
+
+   
+
+}
 
 
