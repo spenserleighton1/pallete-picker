@@ -95,7 +95,8 @@ function postProject(project) {
     <option value='${JSON.stringify(id.id)}'>${project.project_name}</option>
     `)
   })
-  .then(()=> getProjects())
+  .then(() => getProjects())
+  .then(() => getPalettes())
 }
 
 function postPalette(palette) {
