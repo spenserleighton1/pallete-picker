@@ -45,6 +45,8 @@ function generatePalette() {
   })
 }
 
+//SAVE
+
 function saveProject(e) {
   e.preventDefault()
   let inputVal = $('#project-input').val();
@@ -65,6 +67,23 @@ function savePalette(e) {
   postPalette(paletteToSave);
 }
 
+//POST
+
+function postProject(project) {
+  console.log(project)
+  return fetch('/api/v1/projects/', {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(project)
+  })
+  .then(response => response.json())
+  .then(id => {
+    $('.dropdown-menu').append(`
+    <option value='${JSON.stringify(id.id)}'>${project.project_name}</option>
+    `)
+  })
+}
+
 function postPalette(palette) {
   return fetch('/api/v1/palettes/', {
     method: "POST",
@@ -81,23 +100,9 @@ function postPalette(palette) {
   })
   .then(response => response.json())
   .then(() => getProjects())
-
 }
 
-function postProject(project) {
-  console.log(project)
-  return fetch('/api/v1/projects/', {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(project)
-  })
-  .then(response => response.json())
-  .then(id => {
-    $('.dropdown-menu').append(`
-    <option value='${JSON.stringify(id.id)}'>${project.project_name}</option>
-    `)
-  })
-}
+//GET
 
 function getProjects() {
   $('.projects').empty()
@@ -125,14 +130,6 @@ function projectFetch(projects) {
   return Promise.all(unresolvedPromises)
 }
 
-function populateSelect(projects) {
-  projects.forEach(project => {
-    $('.dropdown-menu').append(`
-    <option value='${project.id}'>${project.project_name}</option>
-    `)
-  })
-}
-
 function getPalettes(project_id) {
   return fetch(`/api/v1/palettes/${project_id}`)
     .then(response => response.json())
@@ -154,9 +151,16 @@ function deletePalette() {
   let sectionLength = $(`.${deleteId}`).length
 
   if (!sectionLength) {
-    console.log(projectName)
     $(`#${projectName}`).remove()
   }
+}
+
+function populateSelect(projects) {
+  projects.forEach(project => {
+    $('.dropdown-menu').append(`
+    <option value='${project.id}'>${project.project_name}</option>
+    `)
+  })
 }
 
 function hideProjects() {
@@ -177,7 +181,9 @@ function showCasePalette() {
     $('#card-5').css('background-color', five);
 }
 
+
 function displayProjects(projects) {
+  console.log(projects)
   if (!projects) { return }
 
   $('.projects').prepend(`
@@ -187,9 +193,13 @@ function displayProjects(projects) {
     </article>
   `)
   
-  projects.palettes.forEach(palette => {
-      $(`#${projects.id}`).prepend(`
-      <div class='delete-${projects.id}'>
+  displayPalettes(projects.palettes)
+}
+
+function displayPalettes(palettes) {
+ palettes.forEach(palette => {
+      $(`#${palette.project_id}`).prepend(`
+      <div class='delete-${palette.project_id}'>
         <p>
           <span class='palette-name-span'>Palette Name:</span class='name'> ${palette.palette_name}
           <button class='delete-btn' id='${palette.id}'></button>
