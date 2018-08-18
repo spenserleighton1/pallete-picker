@@ -201,6 +201,10 @@ input {
   border: none;
 }
 
+.delete-project-btn:hover {
+  color: #B22222;
+} 
+
 .no-palettes {
   margin-bottom: 0;
   margin-left: 0;

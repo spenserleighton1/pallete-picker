@@ -2,15 +2,19 @@ const generatePaletteBtn = $('#generate-palette-btn');
 const lockBtn = $('.lock-btn');
 const savePaletteBtn = $('#save-palette-btn');
 const saveProjectBtn = $('#save-project-btn');
-const deleteBtn = $('.projects');
+const deletePaletteBtn = $('.projects');
 const showCase = $('.projects');
+const deleteProjectBtn = $('.projects')
+
 
 generatePaletteBtn.on('click', displayFeaturePalette);
 lockBtn.on('click', toggleLock);
 savePaletteBtn.on('click', savePalette);
 saveProjectBtn.on('click', saveProject);
-deleteBtn.on('click', '.delete-btn', deletePalette);
+deletePaletteBtn.on('click', '.delete-btn', deletePalette);
+deleteProjectBtn.on('click', '.delete-project-btn', deleteProject)
 showCase.on('click', '.display-btn', showCasePalette);
+
 
 let colors = [];
 
@@ -161,6 +165,20 @@ function deletePalette() {
       .children('section')
       .prepend(`<p id='no-palettes-${projectId}'>No palettes to display.</p>`)
   }
+}
+
+function deleteProject() {
+  let projectId = $(this).attr('id')
+
+  fetch(`/api/v1/palettes/delete/${projectId}`, {
+    method: 'DELETE'
+  })
+
+  fetch(`/api/v1/projects/${projectId}`, {
+    method: 'DELETE'
+  });
+
+  $(`#saved-${projectId}`).remove()
 }
 
 function populateSelect(projects) {
