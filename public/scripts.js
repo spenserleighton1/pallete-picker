@@ -178,7 +178,9 @@ function deleteProject() {
   });
 
   $(`#saved-${projectId}`).remove()
-  displayProjects([])
+  if(!$('.projects').children().length) {
+    $('.no-projects').text('No projects to display. Create and Save a new project to add palettes.')
+  }
 }
 
 function populateSelect(projects) {
@@ -198,7 +200,6 @@ function showCasePalette() {
 
 
 function displayProjects(projects) {
-  console.log(projects)
   if (!projects.length) { 
     $('.no-projects').text('No projects to display. Create and Save a new project to add palettes.')
     return

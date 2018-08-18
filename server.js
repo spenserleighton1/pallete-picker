@@ -107,7 +107,6 @@ app.delete('/api/v1/palettes/:id', (request, response) => {
 })
 
 app.delete('/api/v1/palettes/delete/:id', (request, response) => {
-  console.log(request.params.id)
   database('palettes').where('project_id', request.params.id).del()
   .then(d => d)
 })
