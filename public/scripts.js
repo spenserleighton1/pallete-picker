@@ -5,18 +5,19 @@ const saveProjectBtn = $('#save-project-btn');
 const deleteBtn = $('.projects');
 const showCase = $('.projects');
 
-generatePaletteBtn.on('click', generatePalette);
+generatePaletteBtn.on('click', displayFeaturePalette);
 lockBtn.on('click', toggleLock);
 savePaletteBtn.on('click', savePalette);
 saveProjectBtn.on('click', saveProject);
 deleteBtn.on('click', '.delete-btn', deletePalette);
-showCase.on('click', '.mini-card', showCasePalette);
+showCase.on('click', '.display-btn', showCasePalette);
 
 let colors = [];
 
 $(document).ready(() => {
-  generatePalette(),
-  getProjects()
+  displayFeaturePalette(),
+  getProjects(),
+  getPalettes()
 })
 
 function toggleLock() {
@@ -39,10 +40,22 @@ function generateSingleColor(id) {
   return color;
 }
 
-function generatePalette() {
+
+
+
+function displayFeaturePalette(palette) {
   $('.card').each(function(i) {
-    $(this).css('background-color', generateSingleColor(`.card-${i+1}`))
+    return $(this).css('background-color', generateSingleColor(`.card-${i+1}`))
   })
+  
+  if (palette) {
+    let colors = palette[0]
+    $('.card').each(function(i) {
+      let hexDisplay = $(`.card-${i+1}`)
+      hexDisplay.text(colors[`color_${i+1}`])
+      return $(this).css('background-color', colors[`color_${i+1}`])
+    })
+  }
 }
 
 //SAVE
@@ -100,6 +113,7 @@ function postPalette(palette) {
   })
   .then(response => response.json())
   .then(() => getProjects())
+  .then(() => getPalettes())
 }
 
 //GET
@@ -108,34 +122,27 @@ function getProjects() {
   $('.projects').empty()
   return fetch('/api/v1/projects/')
     .then(response => response.json())
-    .then(results => projectFetch(results))
+    .then(results => displayProjects(results))
     .catch(err => console.log(err))
+
+  getPalettes()
 }
 
-function projectFetch(projects) {
-  let unresolvedPromises = projects.map(project => {
-    let palettes = getPalettes(project.id).then(pal => {
-
-      let projectToDisplay = {
-      id: project.id,  
-      name: project.project_name,
-      palettes: pal
-      }
-
-    displayProjects(projectToDisplay)
-    })
-  })
-
-  populateSelect(projects)
-  return Promise.all(unresolvedPromises)
-}
-
-function getPalettes(project_id) {
-  return fetch(`/api/v1/palettes/${project_id}`)
+function getPalettes() {
+  return fetch('/api/v1/palettes/')
     .then(response => response.json())
-    .then(results => results)
+    .then(results => displayPalettes(results))
     .catch(err => console.log(err))
 }
+
+function getPaletteById(id) {
+  return fetch(`/api/v1/palettes/${id}`)
+    .then(response => response.json())
+    .then(results => displayFeaturePalette(results))
+    .catch(err => console.log(err))
+}
+
+//DELETE
 
 function deletePalette() {
   let deleteId = $(this).closest('div').attr('class')
@@ -151,11 +158,13 @@ function deletePalette() {
   let sectionLength = $(`.${deleteId}`).length
 
   if (!sectionLength) {
-    $(`#${projectName}`).remove()
+    $(`#${projectName}`).children('section').text('No palettes to display.')
   }
 }
 
 function populateSelect(projects) {
+  $('select').empty().append(`<option default>Select a project</option>`)
+
   projects.forEach(project => {
     $('.dropdown-menu').append(`
     <option value='${project.id}'>${project.project_name}</option>
@@ -163,46 +172,38 @@ function populateSelect(projects) {
   })
 }
 
-function hideProjects() {
-  
-}
-
 function showCasePalette() {
-    let one = $('.one').css('background-color');
-    let two = $('.two').css('background-color');
-    let three = $('.three').css('background-color');
-    let four = $('.four').css('background-color');
-    let five = $('.five').css('background-color');
-
-    $('#card-1').css('background-color', one);
-    $('#card-2').css('background-color', two);
-    $('#card-3').css('background-color', three);
-    $('#card-4').css('background-color', four);
-    $('#card-5').css('background-color', five);
+  let paletteId = $(this).attr('id')
+  getPaletteById(paletteId)
 }
 
 
 function displayProjects(projects) {
-  console.log(projects)
   if (!projects) { return }
+  populateSelect(projects)
 
-  $('.projects').prepend(`
-    <article class='saved-palettes' id='saved-${projects.id}'>
-      <h2 class='project-name'>${projects.name}</h2>
-      <section class='mini-palettes' id='${projects.id}'></section>
-    </article>
-  `)
-  
-  displayPalettes(projects.palettes)
+  projects.forEach(project => {
+    $('.projects').prepend(`
+      <article class='saved-palettes' id='saved-${project.id}'>
+        <h2 class='project-name'>${project.project_name}</h2>
+        <section class='mini-palettes ${project.id}' id='${project.id}'>
+        No palettes to display.
+        </section>
+      </article>
+    `)
+  })
 }
 
 function displayPalettes(palettes) {
  palettes.forEach(palette => {
+    $(`#${palette.project_id}`).empty()
+
       $(`#${palette.project_id}`).prepend(`
       <div class='delete-${palette.project_id}'>
         <p>
           <span class='palette-name-span'>Palette Name:</span class='name'> ${palette.palette_name}
           <button class='delete-btn' id='${palette.id}'></button>
+          <button class='display-btn' id='${palette.id}'></button>
         </p>
         <article class='mini-card one' style='background-color:${palette.color_1}'></article>
         <article class='mini-card two' style='background-color:${palette.color_2}'></article>
