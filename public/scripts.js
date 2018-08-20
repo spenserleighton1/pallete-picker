@@ -25,7 +25,14 @@ $(document).ready(() => {
 })
 
 function toggleLock() {
+  let lockBtn = $(this)
   $(this).closest('article').toggleClass('locked');
+
+  if(lockBtn.hasClass('lock-btn')) {
+    lockBtn.removeClass('lock-btn').addClass('unlock-btn')
+  } else {
+    lockBtn.removeClass('unlock-btn').addClass('lock-btn')
+  }
 }
 
 function generateSingleColor(id) {
@@ -91,6 +98,8 @@ function savePalette(e) {
       colors.push($(this).text());
       $(this).parent('article').removeClass('locked')
     });
+
+    $('.unlock-btn').removeClass('unlock-btn').addClass('lock-btn')
     let paletteToSave = { palette_name: inputVal, hexCodes: [...colors], project_id: id }
     colors = []
     postPalette(paletteToSave);
