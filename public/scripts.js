@@ -59,29 +59,43 @@ function displayFeaturePalette(palette) {
   }
 }
 
-//SAVE
-
 function saveProject(e) {
   e.preventDefault()
   let inputVal = $('#project-input').val();
   const project = {project_name: inputVal}
-  postProject(project)
+
+  let existingProject = $.find('.project-name').find(project => {
+    return project.innerText === inputVal
+  })
+  if (existingProject) {
+    alert(`Oops! "${inputVal}" already exists in your project directory. Try a different name.`)   
+  } else {
+    postProject(project) 
+  }
 }
 
 function savePalette(e) {
   e.preventDefault()
-  $('.hex').each(function() {
-    colors.push($(this).text());
-  });
-
+  let existingProject = $.find('.project-name').length
   let inputVal = $('#palette-input').val();
   let id = $('select option:selected').val();
-  let paletteToSave = { palette_name: inputVal, hexCodes: [...colors], project_id: id }
-  colors = []
-  postPalette(paletteToSave);
-}
 
-//POST
+  if (!existingProject) {
+    alert('Uh oh! One must create or select a project to save a palette.')
+  } else if (!inputVal) {
+    alert('Invalid or empty palette name.')
+  } else  if (id === 'Select a project') {
+    alert('You forgot to select a project')
+  } else {
+    $('.hex').each(function() {
+      colors.push($(this).text());
+      $(this).parent('article').removeClass('locked')
+    });
+    let paletteToSave = { palette_name: inputVal, hexCodes: [...colors], project_id: id }
+    colors = []
+    postPalette(paletteToSave);
+  }
+}
 
 function postProject(project) {
   return fetch('/api/v1/projects/', {
@@ -118,8 +132,6 @@ function postPalette(palette) {
   .then(() => getPalettes())
 }
 
-//GET
-
 function getProjects() {
   $('.projects').empty()
   return fetch('/api/v1/projects/')
@@ -143,8 +155,6 @@ function getPaletteById(id) {
     .then(results => displayFeaturePalette(results))
     .catch(err => console.log(err))
 }
-
-//DELETE
 
 function deletePalette() {
   let deleteId = $(this).closest('div').attr('class')
@@ -213,7 +223,7 @@ function displayProjects(projects) {
   projects.forEach(project => {
     $('.projects').prepend(`
       <article class='saved-palettes' id='saved-${project.id}'>
-        <h2 class='project-name'>${project.project_name}</h2>
+        <h2 class='project-name ${project.project_name}'>${project.project_name}</h2>
         <section class='mini-palettes ${project.id}' id='${project.id}'>
         <p class='no-palettes' id='no-palettes-${project.id}'>No palettes to display.</p>
         </section>

@@ -103,17 +103,29 @@ app.get('/api/v1/palettes/:id', (request, response) => {
 
 app.delete('/api/v1/palettes/:id', (request, response) => {
   database('palettes').where('id', request.params.id).del()
-  .then(d => d)
+  .then(() => {
+    response.status(202).json({
+      'id': request.params.id
+    });
+  });
 })
 
 app.delete('/api/v1/palettes/delete/:id', (request, response) => {
   database('palettes').where('project_id', request.params.id).del()
-  .then(d => d)
+  .then(() => {
+    response.status(202).json({
+      'id': request.params.id
+    });
+  });
 })
 
 app.delete('/api/v1/projects/:id', (request, response) => {
   database('projects').where('id', request.params.id).del()
-  .then(d => d)
+  .then(() => {
+    response.status(202).json({
+      'id': request.params.id
+    });
+  });
 })
 
 app.set('port', process.env.PORT || 3000);
