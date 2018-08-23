@@ -52,7 +52,6 @@ describe('GET api/v1/projects', () => {
     done()
       })
   })
-  // it('should error')
 })
 
 describe('GET spi/v1/projects/:id', () => {
@@ -193,7 +192,7 @@ describe('DELETE /api/v1/palettes/:id', () => {
 });
 
 describe('DELETE /api/v1/palettes/:project_id', () => {
-  // beforeEachTest()
+  beforeEachTest()
     it('should remove all palettes matching foreign id from the database', done => {
       chai.request(server)
         .delete('/api/v1/palettes/1')
@@ -207,20 +206,6 @@ describe('DELETE /api/v1/palettes/:project_id', () => {
     });
 });
 
-describe('DELETE /api/v1/projects/:id', () => {
-  beforeEachTest()
-    it('should remove a project from theeeee database', done => {
-      chai.request(server)
-        .delete('/api/v1/projects/1')
-        .end((error, response) => {
-          response.should.have.status(202);
-          response.body.should.have.property('id');
-          response.body.id.should.equal('1');
-          response.type.should.equal('application/json');
-          done();
-        });
-    });
-});
 
 
 
